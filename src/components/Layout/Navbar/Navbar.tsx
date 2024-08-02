@@ -1,13 +1,26 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useTransition } from "react";
 import Link from "next/link";
 import { Link as LinkScroll } from "react-scroll";
-import LogoVPN from "../../public/assets/Logo.svg";
 import Image from "next/image";
 import ButtonOutline from "@/components/Button/ButtonSignIn/ButtonOutline";
+import { useStore } from "@/store";
+import { signout } from "@/actions/sign-out";
+import { ClipLoader } from "react-spinners";
+import { useRouter } from "next/navigation";
 
 const AppNavbar: React.FC = () => {
   const [activeLink, setActiveLink] = useState<string | null>(null);
   const [scrollActive, setScrollActive] = useState(false);
+  const [pending, startTrasition] = useTransition()
+  const { me } = useStore()
+  console.log({ pending });
+  const router = useRouter()
+
+  const handleSignOut = () => {
+    startTrasition(async () => await signout())
+    router.push('/sign-in')
+  }
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -114,6 +127,22 @@ const AppNavbar: React.FC = () => {
             <Link href="/sign-up">
               <ButtonOutline>Sign Up</ButtonOutline>
             </Link>
+            <div>
+              <button
+                onClick={handleSignOut}
+                disabled={pending}
+                className="h-10  px-6 tracking-wide inline-flex items-center justify-center font-medium rounded-md bg-red-400 text-white"
+              >
+                {pending ? (
+                  <>
+                    <ClipLoader color="white" className="mr-1" size={20} />
+                    Loading...
+                  </>
+                ) : (
+                  "Sign Out"
+                )}
+              </button>
+            </div>
           </div>
         </nav>
       </header>

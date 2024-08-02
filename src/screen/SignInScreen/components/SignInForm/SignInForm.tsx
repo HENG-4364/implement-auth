@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useTransition } from "react";
 import Image from "next/image";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -9,12 +9,14 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { z } from "zod";
 import { ArrowBigLeftDash } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { signin } from "@/actions/sign-in";
 
 // Define the form data type
 type FormData = z.infer<typeof registerSchema>;
 
 const SignInForm: React.FC = () => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [pending, startTrasition] = useTransition()
   const [alertVisible, setAlertVisible] = useState(false);
   const router = useRouter()
   const {
@@ -26,22 +28,28 @@ const SignInForm: React.FC = () => {
     resolver: zodResolver(registerSchema),
   });
 
-  const onSubmit: SubmitHandler<FormData> = async (data) => {
-    setIsLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+  const onSubmit: SubmitHandler<FormData> = (input) => {
 
-    setTimeout(() => {
-      setIsLoading(false);
-      reset();
+    startTrasition(async () => {
+      const { data, error } = await signin(input)
 
-      setTimeout(() => {
-        setAlertVisible(true);
-
-        setTimeout(() => {
-          setAlertVisible(false);
-        }, 3000);
-      }, 2000);
-    }, 1000);
+      if (error) {
+        toast.error(error, {
+          position: "top-right",
+          style: {
+            fontSize: "11pt"
+          }
+        })
+      } else if (data?.accessToken) {
+        toast.success('Signin successfully', {
+          position: "top-right",
+          style: {
+            fontSize: "11pt"
+          }
+        })
+        router.push('/')
+      }
+    })
   };
 
   return (
@@ -161,10 +169,10 @@ const SignInForm: React.FC = () => {
                   <div className="mt-5  flex items-end">
                     <button
                       type="submit"
-                      disabled={isSubmitting || isLoading}
+                      disabled={pending}
                       className="h-10  px-6 tracking-wide inline-flex items-center justify-center font-medium rounded-md bg-red-400 text-white"
                     >
-                      {isLoading ? (
+                      {pending ? (
                         <>
                           <ClipLoader color="white" className="mr-1" size={20} />
                           Loading...
