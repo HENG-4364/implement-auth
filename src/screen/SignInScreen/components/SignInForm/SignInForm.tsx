@@ -11,6 +11,7 @@ import { ArrowBigLeftDash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { signin } from "@/actions/sign-in";
+import { Checkbox } from "@/components/ui/checkbox";
 
 // Define the form data type
 type FormData = z.infer<typeof registerSchema>;
@@ -19,6 +20,7 @@ const SignInForm: React.FC = () => {
   const [pending, startTrasition] = useTransition()
   const [alertVisible, setAlertVisible] = useState(false);
   const router = useRouter()
+  const [isChecked, setIsChecked] = useState(false);
   const {
     register,
     handleSubmit,
@@ -27,7 +29,9 @@ const SignInForm: React.FC = () => {
   } = useForm<FormData>({
     resolver: zodResolver(registerSchema),
   });
-
+  const handleCheckboxClick = () => {
+    setIsChecked(!isChecked);
+  };
   const onSubmit: SubmitHandler<FormData> = (input) => {
 
     startTrasition(async () => {
@@ -139,7 +143,6 @@ const SignInForm: React.FC = () => {
                       </label>
                       <input
                         {...register("email")}
-                        type="email"
                         className={`  mt-2 w-full py-2 px-3 h-10 bg-transparent  rounded outline-none border focus:ring-0 ${errors.email &&
                           "border-1 border-red-500 "
                           }`}
@@ -155,6 +158,7 @@ const SignInForm: React.FC = () => {
                         Password:
                       </label>
                       <input
+                        type={isChecked ? "" : "password"}
                         {...register("password")}
                         className={`  mt-2 w-full py-2 px-3 h-10 bg-transparent  rounded outline-none border focus:ring-0 ${errors.password &&
                           "border-1 border-red-500 "
@@ -166,11 +170,17 @@ const SignInForm: React.FC = () => {
                       )}
                     </div>
                   </div>
-                  <div className="mt-5  flex items-end">
+                  <div className="w-full mt-3 " >
+                    <Checkbox id="terms" onClick={handleCheckboxClick} />
+                    <label htmlFor="terms" className="ml-2 text-base" >
+                      Show Password
+                    </label>
+                  </div>
+                  <div className="mt-5">
                     <button
                       type="submit"
                       disabled={pending}
-                      className="h-10  px-6 tracking-wide inline-flex items-center justify-center font-medium rounded-md bg-red-400 text-white"
+                      className="w-full h-10  px-6 tracking-wide inline-flex items-center justify-center font-medium rounded-md bg-red-400 text-white"
                     >
                       {pending ? (
                         <>
@@ -181,11 +191,15 @@ const SignInForm: React.FC = () => {
                         "Sign In"
                       )}
                     </button>
-                    {/* <div className="ml-2">
-                      <div className="cursor-pointer text-blue-400 text-sm" onClick={() => router.push("/sign-up")}>
-                        Go to Sign Up
+                    <div className="mt-5 flex justify-center">
+                      <div>
+                        Don't have an account?
                       </div>
-                    </div> */}
+                      <div className="cursor-pointer text-blue-400 ml-1" onClick={() => router.push("/sign-up")}>
+                        Sign Up
+                      </div>
+                    </div>
+
                   </div>
                 </form>
               </div>

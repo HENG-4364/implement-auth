@@ -7,6 +7,22 @@ import { useStore } from "@/store";
 import { signout } from "@/actions/sign-out";
 import { ClipLoader } from "react-spinners";
 import { useRouter } from "next/navigation";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/avatar"
+import { DropdownMenuCheckboxItemProps } from "@radix-ui/react-dropdown-menu"
+
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { LogOut } from "lucide-react";
 
 const AppNavbar: React.FC = () => {
   const [activeLink, setActiveLink] = useState<string | null>(null);
@@ -120,35 +136,60 @@ const AppNavbar: React.FC = () => {
               Testimonial
             </LinkScroll>
           </ul>
+
+
           <div className="col-start-10 col-end-12 font-medium flex justify-end items-center">
-            <Link href="/sign-in" className="text-black-600 mx-2 sm:mx-4 capitalize tracking-wide hover:text-red-500 transition-all">
-              Sign In
-            </Link>
-            <Link href="/sign-up">
-              <ButtonOutline>Sign Up</ButtonOutline>
-            </Link>
-            <div>
-              <button
-                onClick={handleSignOut}
-                disabled={pending}
-                className="h-10  px-6 tracking-wide inline-flex items-center justify-center font-medium rounded-md bg-red-400 text-white"
-              >
-                {pending ? (
-                  <>
-                    <ClipLoader color="white" className="mr-1" size={20} />
-                    Loading...
-                  </>
-                ) : (
-                  "Sign Out"
-                )}
-              </button>
-            </div>
+            {me ?
+              <>
+                <DropdownMenu modal={false}>
+                  <DropdownMenuTrigger asChild>
+                    <Avatar className="cursor-pointer">
+                      <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+                      <AvatarFallback>LH</AvatarFallback>
+                    </Avatar>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56" align="end">
+                    <DropdownMenuLabel>
+                      {me?.email}
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuCheckboxItem
+                      onClick={handleSignOut}
+                      className="cursor-pointer"
+                    >
+                      <LogOut size={18} className="mr-2" />
+                      <button
+                        disabled={pending}
+                      >
+                        {pending ? (
+                          <>
+                            <ClipLoader color="black" className="mr-1" size={20} />
+                            Loading...
+                          </>
+                        ) : (
+                          "Sign Out"
+                        )}
+                      </button>
+                    </DropdownMenuCheckboxItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </>
+              :
+              <>
+                {/* <Link href="/sign-in" className="text-black-600 mx-2 sm:mx-4 capitalize tracking-wide hover:text-red-500 transition-all">
+                  Sign In
+                </Link>
+                <Link href="/sign-up">
+                  <ButtonOutline>Sign Up</ButtonOutline>
+                </Link> */}
+              </>
+            }
           </div>
         </nav>
-      </header>
+      </header >
       {/* Mobile Navigation */}
 
-      <nav className="fixed lg:hidden bottom-0 left-0 right-0 z-50 px-4 sm:px-8 shadow-t">
+      <nav className="fixed lg:hidden bottom-0 left-0 right-0 z-50 px-4 sm:px-8 shadow-t" >
         <div className="bg-white sm:px-3">
           <ul className="flex w-full justify-between items-center text-black-500">
             <LinkScroll
@@ -281,7 +322,7 @@ const AppNavbar: React.FC = () => {
             </LinkScroll>
           </ul>
         </div>
-      </nav>
+      </nav >
     </>
   );
 };
