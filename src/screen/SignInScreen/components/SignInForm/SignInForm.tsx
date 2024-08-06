@@ -18,7 +18,6 @@ type FormData = z.infer<typeof registerSchema>;
 
 const SignInForm: React.FC = () => {
   const [pending, startTrasition] = useTransition()
-  const [alertVisible, setAlertVisible] = useState(false);
   const router = useRouter()
   const [isChecked, setIsChecked] = useState(false);
   const {
@@ -63,66 +62,6 @@ const SignInForm: React.FC = () => {
           <div className="lg:col-span-5 md:col-span-6">
             <div className="lg:ms-5">
               <div className="bg-white dark:bg-slate-900 rounded-md shadow dark:shadow-gray-700 p-6">
-                <div
-                  id="dismiss-alert"
-                  className={`fixed top-4 right-4 transition-transform duration-500 ease-in-out transform ${alertVisible
-                    ? "opacity-100"
-                    : " opacity-0"
-                    } bg-teal-50 border border-teal-200 text-sm text-teal-800 rounded-lg p-4 dark:bg-teal-800/10 dark:border-teal-900 dark:text-teal-500 z-50`}
-                  role="alert"
-                >
-                  <div className="flex">
-                    <div className="flex-shrink-0">
-                      <svg
-                        className="flex-shrink-0 size-4 mt-0.5"
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"></path>
-                        <path d="m9 12 2 2 4-4"></path>
-                      </svg>
-                    </div>
-                    <div className="ms-2">
-                      <div className="text-sm font-medium">
-                        Register has been successfully.
-                      </div>
-                    </div>
-                    <div className="ps-3 ms-auto">
-                      <div className="-mx-1.5 -my-1.5">
-                        <button
-                          type="button"
-                          className="inline-flex bg-teal-50 rounded-lg p-1.5 text-teal-500 hover:bg-teal-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-teal-50 focus:ring-teal-600 dark:bg-transparent dark:hover:bg-teal-800/50 dark:text-teal-600"
-                          data-hs-remove-element="#dismiss-alert"
-                          onClick={() => setAlertVisible(false)}
-                        >
-                          <span className="sr-only">Dismiss</span>
-                          <svg
-                            className="flex-shrink-0 size-4"
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                          >
-                            <path d="M18 6 6 18"></path>
-                            <path d="m6 6 12 12"></path>
-                          </svg>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
                 <form onSubmit={handleSubmit(onSubmit)} className="pb-5">
                   <div className="absolute bg-red-400 py-[1px] px-3 rounded-sm cursor-pointer" onClick={() => router.back()}>
                     <ArrowBigLeftDash color="white" />

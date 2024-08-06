@@ -4,20 +4,20 @@ import React, { useState, useTransition } from "react";
 import Image from "next/image";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
+import { toast } from "sonner";
 import ClipLoader from "react-spinners/ClipLoader";
 import { z } from "zod";
 import { registerSchema } from "../zod/zod";
 import { ArrowBigLeftDash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Checkbox } from "@/components/ui/checkbox";
+import { signup } from "@/actions/sign-up";
 
 // Define the form data type
 type FormData = z.infer<typeof registerSchema>;
 
 const SignUpForm: React.FC = () => {
   const [pending, startTrasition] = useTransition()
-  const [alertVisible, setAlertVisible] = useState(false);
   const router = useRouter()
   const [isChecked, setIsChecked] = useState(false);
   const {
@@ -31,7 +31,27 @@ const SignUpForm: React.FC = () => {
   const handleCheckboxClick = () => {
     setIsChecked(!isChecked);
   };
-  const onSubmit: SubmitHandler<FormData> = async (data) => {
+  const onSubmit: SubmitHandler<FormData> = async (input) => {
+    startTrasition(async () => {
+      const { data, error } = await signup(input)
+
+      if (error) {
+        toast.error(error, {
+          position: "top-right",
+          style: {
+            fontSize: "11pt"
+          }
+        })
+      } else if (data) {
+        toast.success('Signin successfully', {
+          position: "top-right",
+          style: {
+            fontSize: "11pt"
+          }
+        })
+        router.push('/sign-in')
+      }
+    })
 
   };
 
