@@ -7,6 +7,9 @@ import { redirect } from "next/navigation";
 const secretKey = process.env.NEXT_PUBLIC_SECRET_KEY;
 const key = new TextEncoder().encode(secretKey);
 
+const refreshTokenKey = process.env.REFRESH_TOKEN_SECRET;
+const refreshKey = new TextEncoder().encode(refreshTokenKey);
+
 export async function encrypt(payload: SessionPayload) {
   return new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
@@ -20,6 +23,20 @@ export async function decrypt(session: string | undefined = "") {
     const { payload } = await jwtVerify<SessionPayload>(session, key, {
       algorithms: ["HS256"],
     });
+    return payload;
+  } catch (error) {
+    return null;
+  }
+}
+export async function refreshdecrypt(refreshToken: string | undefined = "") {
+  try {
+    const { payload } = await jwtVerify<SessionPayload>(
+      refreshToken,
+      refreshKey,
+      {
+        algorithms: ["HS256"],
+      }
+    );
     return payload;
   } catch (error) {
     return null;

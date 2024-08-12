@@ -29,7 +29,6 @@ const AppNavbar: React.FC = () => {
   const [scrollActive, setScrollActive] = useState(false);
   const [pending, startTrasition] = useTransition()
   const { me } = useStore()
-  console.log({ pending });
   const router = useRouter()
 
   const handleSignOut = () => {

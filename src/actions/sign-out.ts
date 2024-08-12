@@ -5,4 +5,5 @@ import { redirect } from "next/navigation";
 
 export const signout = async () => {
   cookies().delete("sessions");
+  cookies().delete("refreshToken");
 };
